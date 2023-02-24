@@ -90,4 +90,4 @@ class TestLibbraryDBInterface(unittest.TestCase):
       closeMock = Mock()
       self.db_interface.db.close = closeMock()
       self.db_interface.close_db()
-      self.assertTrue(closeMock.called)
+      closeMock.assert_called_once()
