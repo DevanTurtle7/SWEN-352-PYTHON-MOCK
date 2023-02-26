@@ -61,3 +61,15 @@ class TestPatron(unittest.TestCase):
         self.pat.__eq__ = not_equals_mock
         self.pat.__ne__(Mock())
         self.pat.__eq__.assert_called_once()
+    
+    def test_get_fname(self):
+        self.assertEqual(self.pat.get_fname(), 'fname');
+
+    def test_get_lname(self):
+        self.assertEqual(self.pat.get_lname(),'lname');
+
+    def test_get_age(self):
+        self.assertEqual(self.pat.get_age(), '20');
+
+    def test_get_memberID(self):
+        self.assertEqual(self.pat.get_memberID(), '1234');
