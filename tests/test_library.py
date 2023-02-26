@@ -78,7 +78,3 @@ class TestLibrary(unittest.TestCase):
         self.lib.borrow_book("Arabian Love Poems", patron)
         self.assertFalse(self.lib.is_book_borrowed("Cinna", patron))
         self.lib.return_borrowed_book("Arabian Love Poems", patron)
-
-
-    def test_end(self):
-        pass
