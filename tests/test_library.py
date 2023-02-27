@@ -9,9 +9,13 @@ class TestLibrary(unittest.TestCase):
 
     def setUp(self):
         self.lib = library.Library()
-        self.books_data = [{'title': 'Learning Python', 'ebook_count': 3}, {'title': 'Learning Python (Learning)', 'ebook_count': 1}, {'title': 'Learning Python', 'ebook_count': 1}, {'title': 'Learn to Program Using Python', 'ebook_count': 1}, {'title': 'Aprendendo Python', 'ebook_count': 1}, {'title': 'Python Basics', 'ebook_count': 1}]
-        # with open('tests_data/ebooks.txt', 'r') as f:
-        #     self.books_data = json.loads(f.read())
+        #self.books_data = [{'title': 'Learning Python', 'ebook_count': 3}, {'title': 'Learning Python (Learning)', 'ebook_count': 1}, {'title': 'Learning Python', 'ebook_count': 1}, {'title': 'Learn to Program Using Python', 'ebook_count': 1}, {'title': 'Aprendendo Python', 'ebook_count': 1}, {'title': 'Python Basics', 'ebook_count': 1}]
+        with open('tests_data/books_by_author.txt', 'r') as f:
+            self.books_by_author = json.loads(f.read())
+        with open('tests_data/get_book_info.txt', 'r') as f:
+            self.get_book_info = json.loads(f.read())
+        with open('tests_data/ebooks.txt', 'r') as f:
+            self.books_data = json.loads(f.read())
 
     def test_is_ebook_true(self): # HINT
         self.lib.api.get_ebooks = Mock(return_value=self.books_data)
@@ -23,23 +27,19 @@ class TestLibrary(unittest.TestCase):
 
     def test_get_ebooks_count(self): # HINT
         self.lib.api.get_ebooks = Mock(return_value=self.books_data)
-        self.assertEqual(self.lib.get_ebooks_count("learning python"), 8)
+        self.assertEqual(self.lib.get_ebooks_count("learning python"), 9)
 
     def test_is_book_by_author_true(self):
-        self.lib.api.get_ebooks = Mock(return_value=self.books_data)
-        self.assertEqual(self.lib.is_book_by_author("Sarah J. Maas", "A Court of Mist and Fury"), True)
+        self.lib.api.books_by_author = Mock(return_value=self.books_by_author)
+        self.assertTrue(self.lib.is_book_by_author("Nick Mason", "Inside out"))
 
     def test_is_book_by_author_false(self):
         self.lib.api.get_ebooks = Mock(return_value=self.books_data)
         self.assertEqual(self.lib.is_book_by_author("Sarah J. Maas", "Arabian Love Poems"), False)
 
-    def test_get_languages_for_book_english(self):
-        self.lib.api.get_ebooks = Mock(return_value=self.books_data)
-        self.assertEqual(self.lib.get_languages_for_book("Arabian Love Poems"), {"eng"})
-    
-    def test_get_languages_for_book_multiple(self):
-        self.lib.api.get_ebooks = Mock(return_value=self.books_data)
-        self.assertEqual(self.lib.get_languages_for_book("Cinna"), {'eng','ger','tam','spa','mal','ita','nep','tel','fre','dut'})
+    def test_get_languages_for_book(self):
+        self.lib.api.get_book_info = Mock(return_value=self.get_book_info)
+        self.assertEqual(self.lib.get_languages_for_book("Learning Python"), {"eng", "por", "ger"})
 
     def test_register_patron(self):
         self.lib.register_patron("Joe", "Wesnofske", "21", "6160")
