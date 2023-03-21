@@ -4,5 +4,4 @@ virtualenv
 .DS_Store
 .coverage
 htmlcov
-.mutmut-cache
 XXdb.jsonXX
