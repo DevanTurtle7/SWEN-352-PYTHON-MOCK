@@ -17,6 +17,9 @@ class TestLibrary(unittest.TestCase):
         with open('tests_data/ebooks.txt', 'r') as f:
             self.books_data = json.loads(f.read())
 
+    def tearDown(self):
+        self.lib.db.db.purge_tables()
+
     def test_is_ebook_true(self): # HINT
         self.lib.api.get_ebooks = Mock(return_value=self.books_data)
         self.assertTrue(self.lib.is_ebook('learning python'))
@@ -49,6 +52,9 @@ class TestLibrary(unittest.TestCase):
         self.lib.register_patron("Joe", "Wesnofske", "21", "6160")
         patron = library.Patron("Joe", "Wesnofske", "21", "6160")
         self.assertEqual(self.lib.is_patron_registered(patron), True)
+
+    def test_is_patron_registered_not_null(self):
+        self.assertIsNotNone(self.lib.register_patron("Devan", "Kavalchek", "21", "2285"), 3)
     
     def test_is_patron_registered_false(self):
         self.lib.register_patron("Joe", "Wesnofske", "21", "6160")
@@ -56,13 +62,25 @@ class TestLibrary(unittest.TestCase):
         self.assertEqual(self.lib.is_patron_registered(patron), False)
         
     def test_borrow_book(self):
-        patron = library.Patron("Joe", "Wesnofske", "21", "6160")
+        fName = 'Joe'
+        lName = 'Wesnofske'
+        age = '21'
+        memberID = '6160'
+
+        self.lib.register_patron(fName, lName, age, memberID)
+        patron = library.Patron(fName, lName, age, memberID)
         self.lib.borrow_book("Cinna", patron)
         self.assertEqual(self.lib.db.get_all_patrons(), [{"fname": "Joe", "lname": "Wesnofske", "age": "21", "memberID": "6160", "borrowed_books": ["cinna"]}])
         self.lib.return_borrowed_book("Cinna", patron)
     
     def test_return_borrowed_book(self):
-        patron = library.Patron("Joe", "Wesnofske", "21", "6160")
+        fName = 'Joe'
+        lName = 'Wesnofske'
+        age = '21'
+        memberID = '6160'
+
+        self.lib.register_patron(fName, lName, age, memberID)
+        patron = library.Patron(fName, lName, age, memberID)
         self.lib.borrow_book("Cinna", patron)
         self.lib.return_borrowed_book("Cinna", patron)
         self.assertEqual(self.lib.db.get_all_patrons(), [{"fname": "Joe", "lname": "Wesnofske", "age": "21", "memberID": "6160", "borrowed_books": []}])
