@@ -73,3 +73,12 @@ class TestPatron(unittest.TestCase):
 
     def test_get_memberID(self):
         self.assertEqual(self.pat.get_memberID(), '1234');
+
+    def test_new_patron_numbers_fname(self):
+      self.assertRaises(patron.InvalidNameException, patron.Patron, '1fname', 'name', '20', '1234')
+
+    def test_new_patron_numbers_lname(self):
+      self.assertRaises(patron.InvalidNameException, patron.Patron, 'fname', '1name', '20', '1234')
+    
+    def test_name_with_numbers_raises_message(self):
+        self.assertRaisesRegex(patron.InvalidNameException, "^Name should not contain numbers$", patron.Patron, '1fname', 'lname', '20', '1234')
