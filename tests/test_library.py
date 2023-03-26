@@ -40,6 +40,14 @@ class TestLibrary(unittest.TestCase):
         self.lib.api.get_ebooks = Mock(return_value=self.books_data)
         self.assertEqual(self.lib.is_book_by_author("Sarah J. Maas", "Arabian Love Poems"), False)
 
+    def test_single_book_by_author_true(self):
+        self.lib.api.books_by_author = Mock(return_value=['My Book Name'])
+        self.assertTrue(self.lib.is_book_by_author('Author', 'mY boOk NaMe'))
+
+    def test_single_book_by_author_false(self):
+        self.lib.api.books_by_author = Mock(return_value=['My Book Name'])
+        self.assertFalse(self.lib.is_book_by_author('Author', 'Other book name'))
+    
     def test_get_languages_for_book(self):
         self.lib.api.get_book_info = Mock(return_value=self.get_book_info)
         self.assertEqual(self.lib.get_languages_for_book("Learning Python"), {"eng", "por", "ger"})
