@@ -41,6 +41,21 @@ class TestExtApiInterface(unittest.TestCase):
       self.api.make_request = Mock(return_value=self.json_data)
       self.assertEqual(self.api.is_book_available(self.book), self.data_availability)
 
+    def test_is_book_available_zero(self):
+      multi_book_data = {'docs':[]};
+      self.api.make_request = Mock(return_value=multi_book_data)
+      self.assertEqual(self.api.is_book_available(self.book), False)
+
+    def test_is_book_available_one(self):
+      multi_book_data = {'docs':[True]};
+      self.api.make_request = Mock(return_value=multi_book_data)
+      self.assertEqual(self.api.is_book_available(self.book), True)
+
+    def test_is_book_available_multiple(self):
+      multi_book_data = {'docs':[True, True, True]};
+      self.api.make_request = Mock(return_value=multi_book_data)
+      self.assertEqual(self.api.is_book_available(self.book), True)
+
     def test_is_book_available_true(self):
       def check_input(url):
        if url == "http://openlibrary.org/search.json?q="+self.book:
