@@ -40,6 +40,33 @@ class TestExtApiInterface(unittest.TestCase):
     def test_is_book_available(self):
       self.api.make_request = Mock(return_value=self.json_data)
       self.assertEqual(self.api.is_book_available(self.book), self.data_availability)
+
+    def test_is_book_available_true(self):
+      def check_input(url):
+       if url == "http://openlibrary.org/search.json?q="+self.book:
+           return self.json_data
+       else:
+           None
+      self.api.make_request = Mock(side_effect=check_input)
+      self.assertTrue(self.api.is_book_available(self.book))
+
+    def test_is_book_available_false(self):
+      def check_input(url):
+       if url == "XXhttp://openlibrary.org/search.json?q="+self.book+"XX":
+           return self.json_data
+       else:
+           None
+      self.api.make_request = Mock(side_effect=check_input)
+      self.assertFalse(self.api.is_book_available(self.book))
+
+    def test_is_book_available_none(self):
+      def check_input(url):
+       if url == "None":
+           return self.json_data
+       else:
+           None
+      self.api.make_request = Mock(side_effect=check_input)
+      self.assertFalse(self.api.is_book_available(self.book))
     
     def test_books_by_author(self):
       self.api.make_request = Mock(return_value=self.json_author_data)
