@@ -95,3 +95,18 @@ class TestExtApiInterface(unittest.TestCase):
     def test_get_ebooks(self):
         self.api.make_request = Mock(return_value=self.json_data)
         self.assertEqual(self.api.get_ebooks(self.book), self.data_get_ebooks)
+    
+    def test_request_url_books_by_author(self):
+       self.api.make_request = Mock(return_value=[])
+       self.api.books_by_author(self.book_author)
+       self.api.make_request.assert_called_with("http://openlibrary.org/search.json?author=Nick Mason")
+    
+    def test_get_book_info_valid_url(self):
+       self.api.make_request = Mock(return_value=[])
+       self.api.get_book_info(self.book)
+       self.api.make_request.assert_called_with("http://openlibrary.org/search.json?q=learning python")
+
+    def test_get_ebooks_valid_url(self):
+       self.api.make_request = Mock(return_value=[])
+       self.api.get_ebooks(self.book)
+       self.api.make_request.assert_called_with("http://openlibrary.org/search.json?q=learning python")
